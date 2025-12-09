@@ -6,6 +6,11 @@ const passport = require("passport");
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require("bcryptjs");
 
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
+
+
+
 const pool = new Pool({
     host: "localhost", // or wherever the db is hosted
     user: "hassan",
@@ -17,15 +22,11 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
+app.use(passport.initialize());
 app.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 
-//rendering the views
-app.get("/", (req, res) => {
-    res.render("index", { user: req.user });
-});
-app.get("/sign-up", (req, res) => res.render("sign-up"));
 
 //adding user to the db
 app.post("/sign-up", async (req, res, next) => {
@@ -79,10 +80,41 @@ passport.deserializeUser(async (id, done) => {
 app.post(
     "/log-in",
     passport.authenticate("local", {
-        successRedirect: "/",
+        successRedirect: "/home",
         failureRedirect: "/"
     })
 );
+
+//rendering the views
+app.get("/", (req, res) => {
+    res.render("index", { user: req.user });
+});
+app.get("/sign-up", (req, res) => res.render("sign-up"));
+app.get("/home", async (req, res, next) => {
+    if (!req.user) return res.redirect("/");
+
+    try {
+        const { rows: files } = await pool.query(
+            "SELECT id, filename FROM uploads WHERE user_id = $1 ORDER BY uploaded_at DESC",
+            [req.user.id]
+        );
+
+        res.render("home", { user: req.user, files });
+    } catch (err) {
+        next(err);
+    }
+});
+
+
+//uploading files
+app.post("/upload", upload.single("uploadedFile"), async (req, res) => {
+    const { originalname, buffer } = req.file;
+    await pool.query(
+        "INSERT INTO uploads (user_id, filename, filedata) VALUES ($1, $2, $3)",
+        [req.user.id, originalname, buffer]
+    );
+    res.redirect("/home");
+});
 
 app.get("/log-out", (req, res, next) => {
     req.logout((err) => {
