@@ -1,22 +1,18 @@
 const path = require("node:path");
-const { Pool } = require("pg");
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require("bcryptjs");
+const pool = require("./db/pool");
 
 const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 
+//importing routes
+const indexRouter = require("./routes/indexRouter");
+const signUpRouter = require("./routes/signUpRouter");
 
-
-const pool = new Pool({
-    host: "localhost", // or wherever the db is hosted
-    user: "hassan",
-    database: "fileUploader",
-    port: 5432, // The default port
-});
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
@@ -26,19 +22,6 @@ app.use(passport.initialize());
 app.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
-
-
-//adding user to the db
-app.post("/sign-up", async (req, res, next) => {
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        await pool.query("INSERT INTO users (username, password) VALUES ($1, $2)", [req.body.username, hashedPassword]);
-        res.redirect("/");
-    } catch (error) {
-        console.error(error);
-        next(error);
-    }
-});
 
 //passport configuration
 passport.use(
@@ -85,11 +68,12 @@ app.post(
     })
 );
 
+//using routers
+app.use("/", indexRouter);
+app.use("/sign-up", signUpRouter);
+
+
 //rendering the views
-app.get("/", (req, res) => {
-    res.render("index", { user: req.user });
-});
-app.get("/sign-up", (req, res) => res.render("sign-up"));
 app.get("/home", async (req, res, next) => {
     if (!req.user) return res.redirect("/");
 

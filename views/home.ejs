@@ -7,7 +7,9 @@
 <body>
     <% if (locals.user) {%>
         <h1>WELCOME BACK <%= user.username %></h1>
-        <a href="/log-out">LOG OUT</a>
+        <form action="/log-out" method="GET">
+            <button type="submit">Log out</button>
+        </form>
         <h2>Upload a File</h2>
         <form action="/upload" method="POST" enctype="multipart/form-data">
         <input type="file" name="uploadedFile" />

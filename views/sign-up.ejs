@@ -5,14 +5,25 @@
   <title>Sign Up</title>
 </head>
 <body>
-  <h1>Sign Up</h1>
-  <form action="/sign-up" method="POST">
-    <label for="username">Username</label>
-    <input id="username" name="username" placeholder="username" type="text" />
-    <label for="password">Password</label>
-    <input id="password" name="password" type="password" />
-    <button type="submit">Sign Up</button>
-  </form>
+  <h2>Sign Up</h2>
+  <% if (error) { %>
+    <p style="color: red;"><%= error %></p>
+  <% } %>
+<form action="/sign-up" method="POST">
+  <input
+    type="text"
+    name="username"
+    placeholder="Username"
+    value="<%= username || '' %>"
+  />
+  <input
+    type="password"
+    name="password"
+    placeholder="Password"
+  />
+  <button type="submit">Sign Up</button>
+</form>
+
   <button><a href="/">Log In</a></button>
 </body>
 </html>
