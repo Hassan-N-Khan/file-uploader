@@ -7,14 +7,16 @@
 <body>
     <% if (locals.user) {%>
         <h1>WELCOME BACK <%= user.username %></h1>
-        <form action="/log-out" method="GET">
+        <form action="/log-out" method="POST">
             <button type="submit">Log out</button>
         </form>
+
         <h2>Upload a File</h2>
-        <form action="/upload" method="POST" enctype="multipart/form-data">
-        <input type="file" name="uploadedFile" />
-        <button type="submit">Upload</button>
+        <form action="/home/upload" method="POST" enctype="multipart/form-data">
+            <input type="file" name="uploadedFile" />
+            <button type="submit">Upload</button>
         </form>
+
         <h2>Your Files</h2>
         <ul>
             <% files.forEach(file => { %>

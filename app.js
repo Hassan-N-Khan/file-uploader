@@ -6,14 +6,13 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require("bcryptjs");
 const pool = require("./db/pool");
 
-const multer = require("multer");
-const upload = multer({ storage: multer.memoryStorage() });
 
 //importing routes
 const indexRouter = require("./routes/indexRouter");
 const signUpRouter = require("./routes/signUpRouter");
+const homeRouter = require("./routes/homeRouter");
 
-
+//rendering views and middlewares
 const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -61,46 +60,18 @@ passport.deserializeUser(async (id, done) => {
 });
 
 app.post(
-    "/log-in",
-    passport.authenticate("local", {
-        successRedirect: "/home",
-        failureRedirect: "/"
-    })
+  "/log-in",
+  (req, res, next) => {
+    console.log("Log-in attempt:", req.body.username);
+    next();
+  },
+  passport.authenticate("local", {
+    successRedirect: "/home",
+    failureRedirect: "/"
+  })
 );
 
-//using routers
-app.use("/", indexRouter);
-app.use("/sign-up", signUpRouter);
-
-
-//rendering the views
-app.get("/home", async (req, res, next) => {
-    if (!req.user) return res.redirect("/");
-
-    try {
-        const { rows: files } = await pool.query(
-            "SELECT id, filename FROM uploads WHERE user_id = $1 ORDER BY uploaded_at DESC",
-            [req.user.id]
-        );
-
-        res.render("home", { user: req.user, files });
-    } catch (err) {
-        next(err);
-    }
-});
-
-
-//uploading files
-app.post("/upload", upload.single("uploadedFile"), async (req, res) => {
-    const { originalname, buffer } = req.file;
-    await pool.query(
-        "INSERT INTO uploads (user_id, filename, filedata) VALUES ($1, $2, $3)",
-        [req.user.id, originalname, buffer]
-    );
-    res.redirect("/home");
-});
-
-app.get("/log-out", (req, res, next) => {
+app.post("/log-out", (req, res, next) => {
     req.logout((err) => {
         if (err) {
             return next(err);
@@ -109,7 +80,10 @@ app.get("/log-out", (req, res, next) => {
     });
 });
 
-
+//using routers
+app.use("/", indexRouter);
+app.use("/sign-up", signUpRouter);
+app.use("/home", homeRouter);
 
 
 app.listen(3000, (error) => {
