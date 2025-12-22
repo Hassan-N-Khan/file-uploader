@@ -18,6 +18,10 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
+//styles
+const styleSheets = path.join(__dirname, "styles");
+app.use(express.static(styleSheets));
+
 app.use(passport.initialize());
 app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
 app.use(passport.session());

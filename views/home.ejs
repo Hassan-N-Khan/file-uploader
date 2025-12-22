@@ -2,34 +2,104 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
+  <!-- UIkit CSS -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.25.4/dist/css/uikit.min.css" />
+
+  <link rel="stylesheet" href="/main.css">
+  <link rel="stylesheet" href="/home.css">
+
   <title>Home Page</title>
 </head>
 <body>
-    <% if (locals.user) {%>
-        <h1>WELCOME BACK <%= user.username %></h1>
-        <form action="/log-out" method="POST">
-            <button type="submit">Log out</button>
-        </form>
+  <% if (locals.user) { %>
 
-        <h2>Upload a File</h2>
-        <form action="/home/upload" method="POST" enctype="multipart/form-data">
-            <input type="file" name="uploadedFile" required/>
-            <button type="submit">Upload</button>
-        </form>
+    <div class="page-container">
 
-        <h2>Your Files</h2>
-        <ul>
+      <div class="uk-card uk-card-default uk-card-body uk-border-rounded">
+        <div class="uk-flex uk-flex-between uk-flex-middle">
+          <h1 class="uk-margin-remove">
+            Welcome back, <span class="username"><%= user.username %></span>
+          </h1>
+
+          <form action="/log-out" method="POST">
+            <button class="uk-button uk-button-danger uk-button-small">
+              Log out
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="uk-card uk-card-default uk-card-body uk-border-rounded uk-margin-top upload-card">
+        <h3 class="upload-title">Upload a file</h3>
+
+        <form
+            action="/home/upload"
+            method="POST"
+            enctype="multipart/form-data"
+            class="uk-grid-small upload-form"
+            uk-grid
+        >
+            <div class="uk-width-expand">
+            <input
+                class="uk-input upload-input"
+                type="file"
+                name="uploadedFile"
+                required
+            />
+            </div>
+
+            <div>
+            <button class="uk-button uk-button-primary upload-button">
+                Upload
+            </button>
+            </div>
+        </form>
+        </div>
+
+
+      <div class="uk-card uk-card-default uk-card-body uk-border-rounded uk-margin-top">
+        <h3>Your files</h3>
+
+        <% if (files.length === 0) { %>
+          <p class="uk-text-muted">No files uploaded yet.</p>
+        <% } else { %>
+          <ul class="uk-list uk-list-divider">
             <% files.forEach(file => { %>
-                <li><a href="/home/file/<%= file.id %>"><%= file.filename %></a></li>
-                <form action="/home/delete/<%= file.id %>" method="POST">
-                    <button type="submit">Delete</button>
-                </form>
-            <% }) %>
-        </ul>
+              <li class="uk-flex uk-flex-between uk-flex-middle">
+                <a href="/home/file/<%= file.id %>" class="file-link">
+                  <%= file.filename %>
+                </a>
 
-    <% } else { %>
-        <h1>Please Log In or Sign Up</h1>
-        <a href="/">Log In</a> | <a href="/sign-up">Sign Up</a>
-    <%}%>
+                <form action="/home/delete/<%= file.id %>" method="POST">
+                  <button
+                    class="uk-button uk-button-text uk-text-danger"
+                    type="submit"
+                  >
+                    Delete
+                  </button>
+                </form>
+              </li>
+            <% }) %>
+          </ul>
+        <% } %>
+      </div>
+
+    </div>
+
+  <% } else { %>
+    <div class="page-container uk-text-center">
+      <h1>Please log in or sign up</h1>
+      <a href="/" class="uk-button uk-button-primary uk-margin-small-right">Log In</a>
+      <a href="/sign-up" class="uk-button uk-button-default">Sign Up</a>
+    </div>
+  <% } %>
 </body>
+
+
+
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.25.4/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.25.4/dist/js/uikit-icons.min.js"></script>
+
 </html>

@@ -1,0 +1,11 @@
+.auth-card h2 {
+  margin-bottom: 20px;
+}
+
+.auth-card input {
+  height: 44px;
+}
+
+.auth-card button {
+  margin-top: 10px;
+}

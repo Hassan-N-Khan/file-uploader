@@ -1,0 +1,8 @@
+.uk-alert-danger {
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.auth-card button {
+  margin-top: 10px;
+}

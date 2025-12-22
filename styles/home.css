@@ -1,0 +1,74 @@
+.username {
+  color: #2563eb;
+}
+
+.file-link {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.file-link:hover {
+  text-decoration: underline;
+}
+
+.uk-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+
+/* Upload form container */
+.upload-card {
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* Upload form layout */
+.upload-form {
+  align-items: center;
+}
+
+/* File input styling */
+.upload-input {
+  padding: 0.6rem;
+  cursor: pointer;
+  background-color: #f9fafb;
+  border: 1px dashed #cbd5e1;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.upload-input:hover {
+  border-color: #2563eb;
+  background-color: #f1f5ff;
+}
+
+/* Remove ugly default focus ring */
+.upload-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  background-color: #eef2ff;
+}
+
+/* Upload button polish */
+.upload-button {
+  height: 42px;
+  padding: 0 1.25rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.upload-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+}
+
+.upload-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Upload section heading */
+.upload-title {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
