@@ -13,14 +13,17 @@
 
         <h2>Upload a File</h2>
         <form action="/home/upload" method="POST" enctype="multipart/form-data">
-            <input type="file" name="uploadedFile" />
+            <input type="file" name="uploadedFile" required/>
             <button type="submit">Upload</button>
         </form>
 
         <h2>Your Files</h2>
         <ul>
             <% files.forEach(file => { %>
-                <li><a href="/files/<%= file.id %>"><%= file.filename %></a></li>
+                <li><a href="/home/file/<%= file.id %>"><%= file.filename %></a></li>
+                <form action="/home/delete/<%= file.id %>" method="POST">
+                    <button type="submit">Delete</button>
+                </form>
             <% }) %>
         </ul>
 

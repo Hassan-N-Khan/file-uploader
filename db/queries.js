@@ -21,10 +21,26 @@ async function checkUsernameExists(username) {
     return res.rows.length > 0;
 }
 
-async function insertFile(userId, filename, filedata) {
+async function insertFile(userId, filename, filedata, mimetype) {
     const res = await pool.query(
-        "INSERT INTO uploads (user_id, filename, filedata) VALUES ($1, $2, $3)",
-        [userId, filename, filedata]
+        "INSERT INTO uploads (user_id, filename, filedata, mimetype) VALUES ($1, $2, $3, $4)",
+        [userId, filename, filedata, mimetype]
+    );
+    return res;
+}
+
+async function getFile(fileId, userId) {
+    const res = await pool.query(
+        "SELECT * FROM uploads WHERE id = $1 AND user_id = $2",
+        [fileId, userId]
+    );
+    return res.rows[0];
+}
+
+async function deleteFileById(fileId, userId) {
+    const res = await pool.query(
+        "DELETE FROM uploads WHERE id = $1 AND user_id = $2",
+        [fileId, userId]
     );
     return res;
 }
@@ -33,5 +49,7 @@ module.exports = {
     fetchAllUploads,
     insertPasswordAndUsername,
     checkUsernameExists,
-    insertFile
+    insertFile,
+    getFile,
+    deleteFileById
 };

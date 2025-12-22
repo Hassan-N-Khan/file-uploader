@@ -80,6 +80,15 @@ app.post("/log-out", (req, res, next) => {
     });
 });
 
+app.post("/home/log-out", (req, res, next) => {
+    req.logout((err) => {
+        if (err) {
+            return next(err);
+        }
+        res.redirect("/");
+    });
+});
+
 //using routers
 app.use("/", indexRouter);
 app.use("/sign-up", signUpRouter);
