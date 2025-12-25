@@ -99,10 +99,10 @@ app.use("/", indexRouter);
 app.use("/sign-up", signUpRouter);
 app.use("/home", homeRouter);
 
+//koyeb deployment port
+const PORT = process.env.PORT || 3000;
 
-app.listen(3000, (error) => {
-  if (error) {
-    throw error;
-  }
-  console.log("app listening on port 3000!");
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
+
