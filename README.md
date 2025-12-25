@@ -15,8 +15,8 @@ A full-stack Express application that allows users to:
 UI is styled using EJS templates with UIkit and custom CSS.
 
 ## [🚀 LIVE NOW](https://genuine-lizabeth-hassansproject-15b4b51f.koyeb.app/)
-
-
+![alt text](image.png)
+![alt text](image-1.png)
 
 ## Features
 
